@@ -1,0 +1,8 @@
+{
+	"arch": "x64",
+	"created": "2025-09-10 12:57:25",
+	"filename": "b2ee38838440dcda.exe",
+	"language": "rust",
+	"obfuscated": false,
+	"template": "win32-exec"
+}

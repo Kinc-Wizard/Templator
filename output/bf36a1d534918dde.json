@@ -1,0 +1,8 @@
+{
+	"arch": "x64",
+	"created": "2025-09-10 12:57:37",
+	"filename": "bf36a1d534918dde.exe",
+	"language": "csharp",
+	"obfuscated": false,
+	"template": "ntdll-exec"
+}
