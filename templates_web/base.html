@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" class="has-background-black">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ template "title" . }}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="has-background-black">
+<section class="section">
+    <div class="container">
+        <h1 class="title has-text-primary">Templator by bl4ck-m33rk4t</h1>
+        {{ if eq .Page "index" }}
+            {{ template "content" . }}
+        {{ else if eq .Page "downloads" }}
+            {{ template "downloads" . }}
+        {{ else }}
+            <p class="has-text-danger">Unknown page</p>
+        {{ end }}
+    </div>
+</section>
+</body>
+</html>
