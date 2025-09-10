@@ -117,6 +117,9 @@ if [ "$MISSING" -ne 0 ]; then
   exit 1
 fi
 
+chmod +x tools/native/Supernova/Supernova
+chmod +x tools/native/Astral-PE
+
 echo "\nAll set! You should be able to compile C, C#, and Rust templates."
 echo "- C uses: i686-w64-mingw32-gcc / x86_64-w64-mingw32-gcc"
 echo "- C# uses: mono/mcs with .NET 4.5 profile"
