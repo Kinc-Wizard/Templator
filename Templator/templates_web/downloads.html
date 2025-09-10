@@ -1,0 +1,103 @@
+{{ define "downloads" }}
+<div class="card">
+    <div class="table-container">
+        <table class="table is-fullwidth">
+            <thead>
+                <tr>
+                    <th>Filename</th>
+                    <th>Template</th>
+                    <th>Language</th>
+                    <th>Architecture</th>
+                    <th>Created</th>
+                    <th>Obfuscation</th>
+                    <th>Encryption</th>
+                    <th>Process</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{ if .Payloads }}
+                    {{ range .Payloads }}
+                    <tr>
+                        <td>{{ .Filename }}</td>
+                        <td><code>{{ .Template }}</code></td>
+                        <td>
+                            {{ if .Language }}
+                                {{ if eq .Language "c" }}
+                                    <span class="tag" style="background:#0b3d91;color:#fff;border-color:#0b3d91">c</span>
+                                {{ else if eq .Language "csharp" }}
+                                    <span class="tag" style="background:#68217a;color:#fff;border-color:#68217a">csharp</span>
+                                {{ else if eq .Language "rust" }}
+                                    <span class="tag" style="background:#b7410e;color:#fff;border-color:#b7410e">rust</span>
+                                {{ else }}
+                                    <span class="tag" style="background:#444;color:#ddd;border-color:#444">{{ .Language }}</span>
+                                {{ end }}
+                            {{ else }}
+                                <span class="tag" style="background:#444;color:#ddd;border-color:#444">Unknown</span>
+                            {{ end }}
+                        </td>
+                        <td>{{ .Arch }}</td>
+                        <td><small>{{ .Created }}</small></td>
+                        <td>
+                            {{ if .Obfuscated }}
+                                <span class="tag is-info">Obfuscated</span>
+                            {{ else }}
+                                <span class="tag is-light">None</span>
+                            {{ end }}
+                        </td>
+                        <td>
+                            {{ if .Encrypted }}
+                                <span class="tag is-warning">{{ .Encrypted }}</span>
+                            {{ else }}
+                                <span class="tag is-light">None</span>
+                            {{ end }}
+                        </td>
+                        <td>
+                            {{ if .Process }}
+                                <code>{{ .Process }}</code>
+                            {{ else }}
+                                <span class="tag is-light">None</span>
+                            {{ end }}
+                        </td>
+                        <td>
+                            <div class="buttons are-small" style="gap: 0.75rem;">
+                                <a href="/output/{{ .Filename }}" download class="button is-hack" style="min-width: 110px;">
+                                    <span class="icon">⬇️</span>
+                                    <span>Download</span>
+                                </a>
+                                <button onclick="deletePayload('{{ .Filename }}')" class="button is-hack is-danger" style="min-width: 110px;">
+                                    <span class="icon">🗑️</span>
+                                    <span>Delete</span>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    {{ end }}
+                {{ else }}
+                    <tr>
+                        <td colspan="9" class="has-text-centered">No payloads generated yet</td>
+                    </tr>
+                {{ end }}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="mt-5">
+        <a href="/" class="has-text-primary">← Back to Generator</a>
+    </div>
+</div>
+
+<script>
+function deletePayload(filename) {
+    if (confirm('Are you sure you want to delete ' + filename + '?')) {
+        fetch('/delete/' + filename, {
+            method: 'POST'
+        }).then(response => {
+            if (response.ok) {
+                window.location.reload();
+            }
+        });
+    }
+}
+</script>
+{{ end }}

@@ -1,0 +1,9 @@
+{
+  "mingw_x86_lib_path": "/usr/i686-w64-mingw32/lib",
+  "mingw_x64_lib_path": "/usr/x86_64-w64-mingw32/lib",
+  "mono_framework_path": "/usr/lib/mono/4.5",
+  "astral_pe_path": "tools/native/Astral-PE",
+  "c_compiler_x86": "i686-w64-mingw32-gcc",
+  "c_compiler_x64": "x86_64-w64-mingw32-gcc",
+  "csharp_compiler": "mcs"
+}

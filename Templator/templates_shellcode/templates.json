@@ -1,0 +1,56 @@
+{
+    "win32-exec.c": {
+        "name": "Win32 Direct Execution",
+        "description": "Basic shellcode execution in memory:\n- VirtualAlloc for memory allocation\n- memcpy to copy shellcode\n- Direct execution",
+        "language": "c",
+        "supports_obfuscation": true
+    },
+    "win32-exec-aes-encryption.c": {
+        "name": "Win32 Direct Execution Encrypted ShellCode",
+        "description": "Basic execution of ecrypted shellcode in memory:\n- KEY\n- IV\n- Decrypt function\n- VirtualAlloc for memory allocation\n- memcpy to copy shellcode\n- Direct execution",
+        "language": "c",
+        "supports_obfuscation": true,
+        "support_encryption":true
+    },
+    "win32-spawn-process-injection.c": {
+        "name": "Win32 Spawn Process Injection",
+        "description": "Process injection technique:\n- Creates a suspended process\n- Allocates memory in target\n- Injects and executes shellcode",
+        "language": "c",
+        "supports_obfuscation": true,
+        "needs_process": true
+    },
+    "native-spawn-process-injection.c": {
+        "name": "Native Spawn Process Injection",
+        "description": "Native Spawn Process Injection",
+        "language": "c",
+        "needs_process": true,
+        "needs_process_path": true,
+        "supports_obfuscation": true
+    },
+    "win32-spawn-process-injection-aes-encryption.c": {
+        "name": "Win32 Spawn Process Encrypted ShellCode Injection",
+        "description": "Process injection technique:\n- KEY\n- IV \n- Decrypt function\n- Creates a suspended process\n- Allocates memory in target\n- Injects and executes shellcode",
+        "language": "c",
+        "supports_obfuscation": true,
+        "needs_process": true,
+        "support_encryption":true
+    },
+    "win32-exec.cs": {
+        "name": "C# Win32 Direct Execution",
+        "description": "C# shellcode execution:\n- P/Invoke for Win32 API access\n- VirtualAlloc for memory allocation\n- Marshal.Copy for shellcode injection\n- CreateThread for execution",
+        "language": "csharp",
+        "supports_obfuscation": false
+    },
+    "ntdll-exec.cs": {
+        "name": "C# NTDLL Direct Execution",
+        "description": "Alternative C# shellcode execution using NTDLL:\n- Direct NTDLL function calls\n- NtAllocateVirtualMemory for memory allocation\n- NtCreateThreadEx for thread creation\n- Manual function resolution",
+        "language": "csharp",
+        "supports_obfuscation": false
+    },
+    "win32-exec.rs": {
+        "name": "Rust Win32 Direct Execution",
+        "description": "Basic ShellCode Execution : \n- VirtualAlloc \n- assert \n- copy_nonoverlapping \n- VirtualFree",
+        "language": "rust",
+        "supports_obfuscation": false
+    }
+}
