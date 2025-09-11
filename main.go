@@ -62,6 +62,7 @@ func main() {
 	// Static file servers
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 	http.Handle("/output/", http.StripPrefix("/output/", http.FileServer(http.Dir("output"))))
+	http.Handle("/screenshots/", http.StripPrefix("/screenshots/", http.FileServer(http.Dir("screenshots"))))
 
 	fmt.Println("http://localhost:12345")
 	http.ListenAndServe(":12345", nil)

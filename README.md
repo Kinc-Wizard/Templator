@@ -60,6 +60,7 @@ You need to give a template that correspond exactly to the of the template.json 
 - [x] Unitary test in new folder add to GitIgnore, unitary need to test to compile all template in all archtecture available.
 - [ ] Create a new section in the readme for explain how to handle new template
 - [ ] Increase choice methode for encryption template
+- [ ] update Read me with, view, fork and clone incrémenation notion
 - [x] GitIgnore on output
 - [ ] Add référence library :
     ==> Native.h

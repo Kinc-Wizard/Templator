@@ -159,3 +159,47 @@ table.table td .tag.lang-unknown, .card .table td .tag.lang-unknown, .tag.lang-u
     border-color: #444 !important;
     color: #ddd !important;
 }
+
+/* Top sticky compile progress bar */
+.top-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 40px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(18,18,18,0.95);
+    border-bottom: 1px solid #66ffcc;
+    z-index: 10000;
+    backdrop-filter: blur(2px);
+}
+.top-progress.visible { display: flex; }
+.tp-inner {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.top-progress img { display: none; }
+.tp-text {
+    color: #66ffcc;
+    font-weight: bold;
+    letter-spacing: 0.3px;
+}
+.tp-spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(102,255,204,0.3);
+    border-top-color: #66ffcc;
+    border-radius: 50%;
+    animation: spin 0.9s linear infinite;
+}
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Avoid content hidden behind fixed top bar */
+body.has-background-black {
+    padding-top: 48px;
+}

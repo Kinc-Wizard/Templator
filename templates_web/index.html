@@ -260,27 +260,47 @@ document.querySelector('select[name="arch"]').addEventListener('change', functio
 
 document.querySelector('form').addEventListener('submit', function(e) {
     e.preventDefault();
-    
-    const formData = new FormData(this);
-    
+
+    const form = this;
+    const topBar = document.getElementById('topProgress');
+    const submitButton = form.querySelector('button[type="submit"]');
+
+    // Show sticky top bar and set button loading state
+    topBar && topBar.classList.add('visible');
+    submitButton.classList.add('is-loading');
+    submitButton.disabled = true;
+
+    const formData = new FormData(form);
+
     fetch('/upload', {
         method: 'POST',
         body: formData
     })
     .then(response => response.json())
     .then(data => {
+        const message = document.createElement('div');
         if (data.status === 'success') {
-            // Ajouter un message de succès sans recharger la page
-            const message = document.createElement('div');
             message.className = 'notification is-success';
             message.textContent = data.message;
-            document.querySelector('.card').prepend(message);
-            
-            // Faire disparaître le message après 5 secondes
-            setTimeout(() => {
-                message.remove();
-            }, 5000);
+        } else {
+            message.className = 'notification is-danger';
+            message.textContent = data.message || 'Compilation error';
         }
+        document.querySelector('.card').prepend(message);
+        setTimeout(() => { message.remove(); }, data.status === 'success' ? 5000 : 7000);
+    })
+    .catch(() => {
+        const message = document.createElement('div');
+        message.className = 'notification is-danger';
+        message.textContent = 'Network error';
+        document.querySelector('.card').prepend(message);
+        setTimeout(() => { message.remove(); }, 7000);
+    })
+    .finally(() => {
+        // Re-enable the submit button and hide the banner after the request completes
+        submitButton.classList.remove('is-loading');
+        submitButton.disabled = false;
+        topBar && topBar.classList.remove('visible');
     });
 });
 
