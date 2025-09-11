@@ -288,8 +288,13 @@ func CompileRust(templatePath, sourcePath, outputPath, arch string) CompileResul
     SendDebugMessage("⚙️ Using Cargo to build Rust project")
     SendDebugMessage(fmt.Sprintf("📁 Temp project: %s", tempDir))
     SendDebugMessage(fmt.Sprintf("🎯 Target: %s", target))
-    cmd := exec.Command("cargo", "build", "--release", "--target", target)
+    cmd := exec.Command("cargo", "build", "--release", "--target", target, "--quiet")
     cmd.Dir = tempDir
+    // Further reduce verbosity: silence warnings and disable color
+    cmd.Env = append(os.Environ(),
+        "RUSTFLAGS=-Awarnings",
+        "CARGO_TERM_COLOR=never",
+    )
     output, err := cmd.CombinedOutput()
     if err != nil {
         SendDebugMessage(fmt.Sprintf("❌ Rust cargo build failed: %v", err))

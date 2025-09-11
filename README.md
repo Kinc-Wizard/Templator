@@ -55,12 +55,13 @@ You need to give a template that correspond exactly to the of the template.json 
 - [x] Add compilation command line inside template.json : 
 - [x] Update read me : download and installation , goal and purpose of templator
 - [ ] Add New template ( cpp - native - spawn process injection)
-- [ ] Use logo to make loading page during compilation
+- [X] Use logo to make loading page during compilation
 - [ ] Decrase verbosity web terminal
 - [x] Unitary test in new folder add to GitIgnore, unitary need to test to compile all template in all archtecture available.
 - [ ] Create a new section in the readme for explain how to handle new template
 - [ ] Increase choice methode for encryption template
 - [ ] update Read me with, view, fork and clone incrémenation notion
+- [ ] Remove 
 - [x] GitIgnore on output
 - [ ] Add référence library :
     ==> Native.h

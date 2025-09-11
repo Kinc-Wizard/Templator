@@ -81,8 +81,8 @@
         "language": "rust",
         "supports_obfuscation": false,
         "compile": {
-            "x86": "bash -lc 'tmp=$(mktemp -d); cp templates_shellcode/rust/win32-exec/Cargo.toml \"$tmp\"/Cargo.toml; mkdir -p \"$tmp\"/src; cp output/output.rs \"$tmp\"/src/win32-exec.rs; cargo build --release --target i686-pc-windows-gnu --manifest-path \"$tmp\"/Cargo.toml; exe=$(ls \"$tmp\"/target/i686-pc-windows-gnu/release/*.exe | head -n1); cp \"$exe\" {output}'",
-            "x64": "bash -lc 'tmp=$(mktemp -d); cp templates_shellcode/rust/win32-exec/Cargo.toml \"$tmp\"/Cargo.toml; mkdir -p \"$tmp\"/src; cp output/output.rs \"$tmp\"/src/win32-exec.rs; cargo build --release --target x86_64-pc-windows-gnu --manifest-path \"$tmp\"/Cargo.toml; exe=$(ls \"$tmp\"/target/x86_64-pc-windows-gnu/release/*.exe | head -n1); cp \"$exe\" {output}'"
+            "x86": "bash -lc 'tmp=$(mktemp -d); cp templates_shellcode/rust/win32-exec/Cargo.toml \"$tmp\"/Cargo.toml; mkdir -p \"$tmp\"/src; cp output/output.rs \"$tmp\"/src/win32-exec.rs; RUSTFLAGS=-Awarnings CARGO_TERM_COLOR=never cargo build --release --target i686-pc-windows-gnu --manifest-path \"$tmp\"/Cargo.toml --quiet; exe=$(ls \"$tmp\"/target/i686-pc-windows-gnu/release/*.exe | head -n1); cp \"$exe\" {output}'",
+            "x64": "bash -lc 'tmp=$(mktemp -d); cp templates_shellcode/rust/win32-exec/Cargo.toml \"$tmp\"/Cargo.toml; mkdir -p \"$tmp\"/src; cp output/output.rs \"$tmp\"/src/win32-exec.rs; RUSTFLAGS=-Awarnings CARGO_TERM_COLOR=never cargo build --release --target x86_64-pc-windows-gnu --manifest-path \"$tmp\"/Cargo.toml --quiet; exe=$(ls \"$tmp\"/target/x86_64-pc-windows-gnu/release/*.exe | head -n1); cp \"$exe\" {output}'"
         }
     }
 }
