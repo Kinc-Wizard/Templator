@@ -57,7 +57,8 @@ You need to give a template that correspond exactly to the of the template.json 
 - [ ] Add New template ( cpp - native - spawn process injection)
 - [ ] Use logo to make loading page during compilation
 - [ ] Decrase verbosity web terminal
-- [ ] Unitary test in new folder add to GitIgnore, unitary need to test to compile all template in all archtecture available.
+- [x] Unitary test in new folder add to GitIgnore, unitary need to test to compile all template in all archtecture available.
+- [ ] Create a new section in the readme for explain how to handle new template
 - [ ] Increase choice methode for encryption template
 - [x] GitIgnore on output
 - [ ] Add référence library :
@@ -65,12 +66,12 @@ You need to give a template that correspond exactly to the of the template.json 
     ==> Win32.h
  
 ## Features v0.7
-Generator function :
-New web page dedicated to template génération
-Select langage
-Select api level
-Visualize in interconnected map the possible systemcall : pre-phrase --> possibility step by step (1 - OpenProcress, Exec, Download) --> find a way to map the possibility
-Can save the actual template
-Can debbug (try too compile) actual template
-Expérimenten full place holder template génération {{win32.openprocress, native.ntopenprocess}}
-Add New place holder {{langage.c}} in function of language
+### Generator function :
+- [ ] New web page dedicated to template génération
+      - [ ] Select langage
+      - [ ] Select api level
+      - [ ] Visualize in interconnected map the possible systemcall : pre-phrase --> possibility step by step (1 OpenProcress, Exec, Download) --> find a way to map the possibility
+      - [ ] Can save the actual template
+      - [ ] Can debbug (try too compile) actual template
+      - [ ] Expérimenten full place holder template génération {{win32.openprocress, native.ntopenprocess}}
+      - [ ] Add New place holder {{langage.c}} in function of language

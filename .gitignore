@@ -29,3 +29,15 @@ build/
 target/
 **/target/
 
+# Tests
+tests/
+tests_output/
+tests_reports/
+
+# Local test config
+test_config.json
+
+# Coverage reports
+coverage.out
+coverage.html
+
