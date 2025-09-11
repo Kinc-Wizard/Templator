@@ -1,4 +1,10 @@
 # Templator
+
+![GitHub Stars](https://img.shields.io/github/stars/Kinc-Wizard/Templator?style=social)
+![GitHub Forks](https://img.shields.io/github/forks/Kinc-Wizard/Templator?style=social)
+![GitHub Watchers](https://img.shields.io/github/watchers/Kinc-Wizard/Templator?style=social)
+[![Views](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https://github.com/Kinc-Wizard/Templator&count_bg=%2379C83D&title_bg=%23555555&icon=github.svg&icon_color=%23FFFFFF&title=views&edge_flat=false)](https://hits.seeyoufarm.com)
+
 ShellCode Template, generate custom shellcode loader trought template selection
 
 <p align="center">
@@ -55,8 +61,8 @@ You need to give a template that correspond exactly to the of the template.json 
 - [x] Add compilation command line inside template.json : 
 - [x] Update read me : download and installation , goal and purpose of templator
 - [ ] Add New template ( cpp - native - spawn process injection)
-- [X] Use logo to make loading page during compilation
-- [ ] Decrase verbosity web terminal
+- [x] Use logo to make loading page during compilation
+- [x] Decrase verbosity web terminal
 - [x] Unitary test in new folder add to GitIgnore, unitary need to test to compile all template in all archtecture available.
 - [ ] Create a new section in the readme for explain how to handle new template
 - [ ] Increase choice methode for encryption template
