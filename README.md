@@ -3,7 +3,6 @@
 ![GitHub Stars](https://img.shields.io/github/stars/Kinc-Wizard/Templator?style=social)
 ![GitHub Forks](https://img.shields.io/github/forks/Kinc-Wizard/Templator?style=social)
 ![GitHub Watchers](https://img.shields.io/github/watchers/Kinc-Wizard/Templator?style=social)
-[![Views](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https://github.com/Kinc-Wizard/Templator&count_bg=%2379C83D&title_bg=%23555555&icon=github.svg&icon_color=%23FFFFFF&title=views&edge_flat=false)](https://hits.seeyoufarm.com)
 
 ShellCode Template, generate custom shellcode loader trought template selection
 
