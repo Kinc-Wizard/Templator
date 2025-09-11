@@ -20,17 +20,19 @@ type Template struct {
 	SupportsObfuscation bool
 	SupportEncryption   bool
 	NeedsProcessPath    bool
+	Compile             map[string]string
 }
 
 // TemplateInfo represents template information for API responses
 type TemplateInfo struct {
-	Name                string `json:"name"`
-	Description         string `json:"description"`
-	Language            string `json:"language"`
-	SupportsObfuscation bool   `json:"supports_obfuscation"`
-	NeedsProcess        bool   `json:"needs_process"`
-	SupportEncryption   bool   `json:"support_encryption"`
-	NeedsProcessPath    bool   `json:"needs_process_path"`
+	Name                string            `json:"name"`
+	Description         string            `json:"description"`
+	Language            string            `json:"language"`
+	SupportsObfuscation bool              `json:"supports_obfuscation"`
+	NeedsProcess        bool              `json:"needs_process"`
+	SupportEncryption   bool              `json:"support_encryption"`
+	NeedsProcessPath    bool              `json:"needs_process_path"`
+	Compile             map[string]string `json:"compile"`
 }
 
 // Global variable to store templates
@@ -113,6 +115,7 @@ func ScanAvailableTemplates() []Template {
 											NeedsProcess:        info.NeedsProcess,
 											SupportEncryption:   info.SupportEncryption,
 											NeedsProcessPath:    info.NeedsProcessPath,
+											Compile:             info.Compile,
 										})
 									} else {
 										templates = append(templates, Template{
@@ -124,6 +127,7 @@ func ScanAvailableTemplates() []Template {
 											NeedsProcess:        false,
 											SupportEncryption:   false,
 											NeedsProcessPath:    false,
+											Compile:             nil,
 										})
 									}
 								}
@@ -167,6 +171,7 @@ func ScanAvailableTemplates() []Template {
 								NeedsProcess:        info.NeedsProcess,
 								SupportEncryption:   info.SupportEncryption,
 								NeedsProcessPath:    info.NeedsProcessPath,
+								Compile:             info.Compile,
 							})
 						} else {
 							templates = append(templates, Template{
@@ -178,6 +183,7 @@ func ScanAvailableTemplates() []Template {
 								NeedsProcess:        false,
 								SupportEncryption:   false,
 								NeedsProcessPath:    false,
+								Compile:             nil,
 							})
 						}
 					}
@@ -210,6 +216,7 @@ func GetTemplateDetails(templateName, language string) (*TemplateInfo, error) {
 				NeedsProcess:        tpl.NeedsProcess,
 				SupportEncryption:   tpl.SupportEncryption,
 				NeedsProcessPath:    tpl.NeedsProcessPath,
+				Compile:             tpl.Compile,
 			}
 			return info, nil
 		}

@@ -208,13 +208,34 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
 	// Compile
 	SendDebugMessage("🔨 Starting compilation...")
 	var compileResult CompileResult
-	if selectedTemplate.Language == "c" {
-		hasEncryption := encAlgoSelected != ""
-		compileResult = CompileC(sourcePath, outputPE, arch, hasEncryption)
-	} else if selectedTemplate.Language == "csharp" {
-		compileResult = CompileCSharp(sourcePath, outputPE, arch)
-	} else if selectedTemplate.Language == "rust" {
-		compileResult = CompileRust(selectedTemplate.Path, sourcePath, outputPE, arch)
+
+	// Build placeholders for custom compile (only output)
+	placeholders := map[string]string{
+		"output": outputPE,
+	}
+
+	// Use custom compile if provided
+	if selectedTemplate.Compile != nil {
+		if cmd, ok := selectedTemplate.Compile[arch]; ok && strings.TrimSpace(cmd) != "" {
+			compileResult = RunCustomCompile(cmd, placeholders, "")
+		}
+		if compileResult.Output == nil && compileResult.Error == nil {
+			if cmdAll, ok := selectedTemplate.Compile["*"]; ok && strings.TrimSpace(cmdAll) != "" {
+				compileResult = RunCustomCompile(cmdAll, placeholders, "")
+			}
+		}
+	}
+
+	// Fallback to built-in compilers if no custom compile ran
+	if compileResult.Output == nil && compileResult.Error == nil {
+		if selectedTemplate.Language == "c" {
+			hasEncryption := encAlgoSelected != ""
+			compileResult = CompileC(sourcePath, outputPE, arch, hasEncryption)
+		} else if selectedTemplate.Language == "csharp" {
+			compileResult = CompileCSharp(sourcePath, outputPE, arch)
+		} else if selectedTemplate.Language == "rust" {
+			compileResult = CompileRust(selectedTemplate.Path, sourcePath, outputPE, arch)
+		}
 	}
 
 	if !compileResult.Success {

@@ -1,7 +1,9 @@
 package internals
 
 import (
+	"bufio"
 	"fmt"
+	"io"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -21,9 +23,9 @@ func CompileC(sourcePath, outputPath, arch string, hasEncryption bool) CompileRe
 	
 	var compiler string
 	if arch == "x86" {
-		compiler = Config.CCompilerX86
+		if Config.CCompilerX86 != "" { compiler = Config.CCompilerX86 } else { compiler = "i686-w64-mingw32-gcc" }
 	} else {
-		compiler = Config.CCompilerX64
+		if Config.CCompilerX64 != "" { compiler = Config.CCompilerX64 } else { compiler = "x86_64-w64-mingw32-gcc" }
 	}
 
 	var libPath string
@@ -34,7 +36,10 @@ func CompileC(sourcePath, outputPath, arch string, hasEncryption bool) CompileRe
 	}
 
 	// Add -lbcrypt at the very end of the arguments (important for linking under mingw)
-	compileArgs := []string{sourcePath, "-o", outputPath, "-fno-pie", "-static", "-L" + libPath}
+	compileArgs := []string{sourcePath, "-o", outputPath, "-fno-pie", "-static"}
+	if libPath != "" {
+		compileArgs = append(compileArgs, "-L"+libPath)
+	}
 	if hasEncryption {
 		SendDebugMessage("🔐 Adding encryption libraries (bcrypt)...")
 		compileArgs = append(compileArgs, "-Wl,--start-group", "-lbcrypt", "-Wl,--end-group")
@@ -44,13 +49,30 @@ func CompileC(sourcePath, outputPath, arch string, hasEncryption bool) CompileRe
 	SendDebugMessage(fmt.Sprintf("📁 Output: %s", outputPath))
 
 	cmd := exec.Command(compiler, compileArgs...)
-	output, err := cmd.CombinedOutput()
-	
+	stdout, _ := cmd.StdoutPipe()
+	stderr, _ := cmd.StderrPipe()
+	if err := cmd.Start(); err != nil {
+		SendDebugMessage(fmt.Sprintf("❌ C compilation failed to start: %v", err))
+		return CompileResult{Success: false, Output: nil, Error: err}
+	}
+	var buf strings.Builder
+	stream := func(r io.Reader, prefix string) {
+		sc := bufio.NewScanner(r)
+		for sc.Scan() {
+			line := sc.Text()
+			buf.WriteString(line + "\n")
+			SendDebugMessage(prefix + line)
+		}
+	}
+	go stream(stdout, "📤 ")
+	go stream(stderr, "⚠️ ")
+	err := cmd.Wait()
+	output := []byte(buf.String())
+
 	if err == nil {
 		SendDebugMessage("✅ C compilation successful!")
 	} else {
 		SendDebugMessage(fmt.Sprintf("❌ C compilation failed: %v", err))
-		SendDebugMessage(fmt.Sprintf("📄 Compiler output: %s", string(output)))
 	}
 	
 	return CompileResult{
@@ -64,39 +86,68 @@ func CompileC(sourcePath, outputPath, arch string, hasEncryption bool) CompileRe
 func CompileCSharp(sourcePath, outputPath, arch string) CompileResult {
 	SendDebugMessage(fmt.Sprintf("🔨 Compiling C# source for %s architecture...", arch))
 	
-	// Using Mono framework path from config
-	monoPath := Config.MonoFrameworkPath
-	dllPath := filepath.Join(monoPath, "Facades", "System.Runtime.InteropServices.dll")
-
-	// Build the C# compilation command
-	csCompilerComponents := strings.Fields(Config.CSharpCompiler)
-	csCompilerExe := csCompilerComponents[0]
+	// Prefer standard compilers if config is empty
+	csCompilerComponents := strings.Fields(strings.TrimSpace(Config.CSharpCompiler))
+	csCompilerExe := "mcs"
 	csCompilerArgs := []string{}
-	if len(csCompilerComponents) > 1 {
-		csCompilerArgs = append(csCompilerArgs, csCompilerComponents[1:]...)
+	if len(csCompilerComponents) > 0 && csCompilerComponents[0] != "" {
+		csCompilerExe = csCompilerComponents[0]
+		if len(csCompilerComponents) > 1 {
+			csCompilerArgs = append(csCompilerArgs, csCompilerComponents[1:]...)
+		}
 	}
+
+	monoPath := strings.TrimSpace(Config.MonoFrameworkPath)
+	dllPath := ""
+	if monoPath != "" {
+		dllPath = filepath.Join(monoPath, "Facades", "System.Runtime.InteropServices.dll")
+	}
+
 	csCompilerArgs = append(csCompilerArgs,
 		"-target:winexe",
 		"-platform:"+strings.ToLower(arch),
 		"-unsafe",
-		"-sdk:4.5",
-		fmt.Sprintf("-lib:%s", monoPath),
-		fmt.Sprintf("-r:%s", dllPath),
+	)
+	if monoPath != "" {
+		csCompilerArgs = append(csCompilerArgs,
+			fmt.Sprintf("-lib:%s", monoPath),
+			fmt.Sprintf("-r:%s", dllPath),
+		)
+	}
+	csCompilerArgs = append(csCompilerArgs,
 		"-out:"+outputPath,
-		sourcePath)
+		sourcePath,
+	)
 
 	SendDebugMessage(fmt.Sprintf("⚙️ Using C# compiler: %s", csCompilerExe))
 	SendDebugMessage(fmt.Sprintf("📁 Output: %s", outputPath))
-	SendDebugMessage(fmt.Sprintf("📚 Mono framework: %s", monoPath))
+	if monoPath != "" { SendDebugMessage(fmt.Sprintf("📚 Mono framework: %s", monoPath)) }
 
 	compileCmd := exec.Command(csCompilerExe, csCompilerArgs...)
-	output, err := compileCmd.CombinedOutput()
-	
+	stdout, _ := compileCmd.StdoutPipe()
+	stderr, _ := compileCmd.StderrPipe()
+	if err := compileCmd.Start(); err != nil {
+		SendDebugMessage(fmt.Sprintf("❌ C# compilation failed to start: %v", err))
+		return CompileResult{Success: false, Output: nil, Error: err}
+	}
+	var buf2 strings.Builder
+	stream := func(r io.Reader, prefix string) {
+		sc := bufio.NewScanner(r)
+		for sc.Scan() {
+			line := sc.Text()
+			buf2.WriteString(line + "\n")
+			SendDebugMessage(prefix + line)
+		}
+	}
+	go stream(stdout, "📤 ")
+	go stream(stderr, "⚠️ ")
+	err := compileCmd.Wait()
+	output := []byte(buf2.String())
+
 	if err == nil {
 		SendDebugMessage("✅ C# compilation successful!")
 	} else {
 		SendDebugMessage(fmt.Sprintf("❌ C# compilation failed: %v", err))
-		SendDebugMessage(fmt.Sprintf("📄 Compiler output: %s", string(output)))
 	}
 	
 	return CompileResult{
@@ -285,6 +336,9 @@ func RunAstralPE(inputPath, outputPath string) CompileResult {
 	SendDebugMessage(fmt.Sprintf("📁 Output: %s", outputPath))
 	
 	astralPath := Config.AstralPEPath
+	if strings.TrimSpace(astralPath) == "" {
+		astralPath = filepath.Join("tools", "native", "Astral-PE")
+	}
 
 	if _, err := os.Stat(astralPath); os.IsNotExist(err) {
 		SendDebugMessage(fmt.Sprintf("❌ Astral-PE not found at: %s", astralPath))
@@ -313,4 +367,43 @@ func RunAstralPE(inputPath, outputPath string) CompileResult {
 		Output:  output,
 		Error:   err,
 	}
+}
+
+// RunCustomCompile executes a user-defined compile command with live streaming
+func RunCustomCompile(cmdTemplate string, placeholders map[string]string, workDir string) CompileResult {
+	cmdStr := cmdTemplate
+	for k, v := range placeholders {
+		cmdStr = strings.ReplaceAll(cmdStr, "{"+k+"}", v)
+	}
+	SendDebugMessage("🔨 Custom compile started")
+	SendDebugMessage("🧱 Command: " + cmdStr)
+	cmd := exec.Command("/bin/sh", "-lc", cmdStr)
+	if workDir != "" {
+		cmd.Dir = workDir
+	}
+	stdout, _ := cmd.StdoutPipe()
+	stderr, _ := cmd.StderrPipe()
+	if err := cmd.Start(); err != nil {
+		SendDebugMessage(fmt.Sprintf("❌ Failed to start command: %v", err))
+		return CompileResult{Success: false, Output: nil, Error: err}
+	}
+	var buf strings.Builder
+	stream := func(r io.Reader, prefix string) {
+		sc := bufio.NewScanner(r)
+		for sc.Scan() {
+			line := sc.Text()
+			buf.WriteString(line + "\n")
+			SendDebugMessage(prefix + line)
+		}
+	}
+	go stream(stdout, "📤 ")
+	go stream(stderr, "⚠️ ")
+	err := cmd.Wait()
+	outBytes := []byte(buf.String())
+	if err != nil {
+		SendDebugMessage("❌ Custom compile failed")
+		return CompileResult{Success: false, Output: outBytes, Error: err}
+	}
+	SendDebugMessage("✅ Custom compile finished")
+	return CompileResult{Success: true, Output: outBytes, Error: nil}
 }

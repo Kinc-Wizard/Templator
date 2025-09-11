@@ -3,21 +3,33 @@
         "name": "Win32 Direct Execution",
         "description": "Basic shellcode execution in memory:\n- VirtualAlloc for memory allocation\n- memcpy to copy shellcode\n- Direct execution",
         "language": "c",
-        "supports_obfuscation": true
+        "supports_obfuscation": true,
+        "compile": {
+            "x86": "i686-w64-mingw32-gcc output/output.c -o {output} -fno-pie -static",
+            "x64": "x86_64-w64-mingw32-gcc output/output.c -o {output} -fno-pie -static"
+        }
     },
     "win32-exec-aes-encryption.c": {
         "name": "Win32 Direct Execution Encrypted ShellCode",
         "description": "Basic execution of ecrypted shellcode in memory:\n- KEY\n- IV\n- Decrypt function\n- VirtualAlloc for memory allocation\n- memcpy to copy shellcode\n- Direct execution",
         "language": "c",
         "supports_obfuscation": true,
-        "support_encryption":true
+        "support_encryption": true,
+        "compile": {
+            "x86": "i686-w64-mingw32-gcc output/output.c -o {output} -fno-pie -static -Wl,--start-group -lbcrypt -Wl,--end-group",
+            "x64": "x86_64-w64-mingw32-gcc output/output.c -o {output} -fno-pie -static -Wl,--start-group -lbcrypt -Wl,--end-group"
+        }
     },
     "win32-spawn-process-injection.c": {
         "name": "Win32 Spawn Process Injection",
         "description": "Process injection technique:\n- Creates a suspended process\n- Allocates memory in target\n- Injects and executes shellcode",
         "language": "c",
         "supports_obfuscation": true,
-        "needs_process": true
+        "needs_process": true,
+        "compile": {
+            "x86": "i686-w64-mingw32-gcc output/output.c -o {output} -fno-pie -static",
+            "x64": "x86_64-w64-mingw32-gcc output/output.c -o {output} -fno-pie -static"
+        }
     },
     "native-spawn-process-injection.c": {
         "name": "Native Spawn Process Injection",
@@ -25,7 +37,11 @@
         "language": "c",
         "needs_process": true,
         "needs_process_path": true,
-        "supports_obfuscation": true
+        "supports_obfuscation": true,
+        "compile": {
+            "x86": "i686-w64-mingw32-gcc output/output.c -o {output} -fno-pie -static",
+            "x64": "x86_64-w64-mingw32-gcc output/output.c -o {output} -fno-pie -static"
+        }
     },
     "win32-spawn-process-injection-aes-encryption.c": {
         "name": "Win32 Spawn Process Encrypted ShellCode Injection",
@@ -33,24 +49,40 @@
         "language": "c",
         "supports_obfuscation": true,
         "needs_process": true,
-        "support_encryption":true
+        "support_encryption": true,
+        "compile": {
+            "x86": "i686-w64-mingw32-gcc output/output.c -o {output} -fno-pie -static -Wl,--start-group -lbcrypt -Wl,--end-group",
+            "x64": "x86_64-w64-mingw32-gcc output/output.c -o {output} -fno-pie -static -Wl,--start-group -lbcrypt -Wl,--end-group"
+        }
     },
     "win32-exec.cs": {
         "name": "C# Win32 Direct Execution",
         "description": "C# shellcode execution:\n- P/Invoke for Win32 API access\n- VirtualAlloc for memory allocation\n- Marshal.Copy for shellcode injection\n- CreateThread for execution",
         "language": "csharp",
-        "supports_obfuscation": false
+        "supports_obfuscation": false,
+        "compile": {
+            "x86": "mcs -target:winexe -platform:x86 -unsafe -out:{output} output/output.cs",
+            "x64": "mcs -target:winexe -platform:x64 -unsafe -out:{output} output/output.cs"
+        }
     },
     "ntdll-exec.cs": {
         "name": "C# NTDLL Direct Execution",
         "description": "Alternative C# shellcode execution using NTDLL:\n- Direct NTDLL function calls\n- NtAllocateVirtualMemory for memory allocation\n- NtCreateThreadEx for thread creation\n- Manual function resolution",
         "language": "csharp",
-        "supports_obfuscation": false
+        "supports_obfuscation": false,
+        "compile": {
+            "x86": "mcs -target:winexe -platform:x86 -unsafe -out:{output} output/output.cs",
+            "x64": "mcs -target:winexe -platform:x64 -unsafe -out:{output} output/output.cs"
+        }
     },
     "win32-exec.rs": {
         "name": "Rust Win32 Direct Execution",
         "description": "Basic ShellCode Execution : \n- VirtualAlloc \n- assert \n- copy_nonoverlapping \n- VirtualFree",
         "language": "rust",
-        "supports_obfuscation": false
+        "supports_obfuscation": false,
+        "compile": {
+            "x86": "bash -lc 'tmp=$(mktemp -d); cp templates_shellcode/rust/win32-exec/Cargo.toml \"$tmp\"/Cargo.toml; mkdir -p \"$tmp\"/src; cp output/output.rs \"$tmp\"/src/win32-exec.rs; cargo build --release --target i686-pc-windows-gnu --manifest-path \"$tmp\"/Cargo.toml; exe=$(ls \"$tmp\"/target/i686-pc-windows-gnu/release/*.exe | head -n1); cp \"$exe\" {output}'",
+            "x64": "bash -lc 'tmp=$(mktemp -d); cp templates_shellcode/rust/win32-exec/Cargo.toml \"$tmp\"/Cargo.toml; mkdir -p \"$tmp\"/src; cp output/output.rs \"$tmp\"/src/win32-exec.rs; cargo build --release --target x86_64-pc-windows-gnu --manifest-path \"$tmp\"/Cargo.toml; exe=$(ls \"$tmp\"/target/x86_64-pc-windows-gnu/release/*.exe | head -n1); cp \"$exe\" {output}'"
+        }
     }
 }

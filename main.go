@@ -11,8 +11,12 @@ import (
 )
 
 func main() {
-	// Load configuration at startup
-	internals.LoadAppConfig()
+	// Load configuration at startup (optional)
+	if _, err := os.Stat("config.json"); err == nil {
+		internals.LoadAppConfig()
+	} else {
+		internals.SendDebugMessage("⚠️ config.json not found; using defaults and PATH tools")
+	}
 
 	// Create necessary directories
 	os.MkdirAll("output", 0755)
