@@ -63,17 +63,19 @@ You need to give a template that correspond exactly to the of the template.json 
 - [x] Use logo to make loading page during compilation
 - [x] Decrase verbosity web terminal
 - [x] Unitary test in new folder add to GitIgnore, unitary need to test to compile all template in all archtecture available.
-- [ ] Create a new section in the readme for explain how to handle new template
+- [ ] Post demo video in the readme
 - [ ] Increase choice methode for encryption template
-- [ ] update Read me with, view, fork and clone incrémenation notion
-- [ ] Remove 
+- [x] update Read me with, view, fork and clone incrémenation notion
 - [x] GitIgnore on output
-- [ ] Add référence library :
-    ==> Native.h
-    ==> Win32.h
+- [ ] Column custom commentaty by operator
+- [ ] Column hash for IOCs 
+
  
 ## Features v0.7
 ### Generator function :
+- [ ] Add référence library :
+    ==> Native.h
+    ==> Win32.h
 - [ ] New web page dedicated to template génération
       - [ ] Select langage
       - [ ] Select api level
