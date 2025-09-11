@@ -1,1 +1,0 @@
-/home/bl4ck-m33rk4t/tools/malware/Templator/output/rust_build_86e39582c427dfe3/target/x86_64-pc-windows-gnu/release/mon-projet.exe: /home/bl4ck-m33rk4t/tools/malware/Templator/output/rust_build_86e39582c427dfe3/src/main.rs
