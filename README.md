@@ -65,7 +65,7 @@ You need to give a template that correspond exactly to the of the template.json 
 - [x] Use logo to make loading page during compilation
 - [x] Decrase verbosity web terminal
 - [x] Unitary test in new folder add to GitIgnore, unitary need to test to compile all template in all archtecture available.
-- [ ] Post demo video in the readme
+- [X] Post demo video in the readme
 - [x] update Read me with, view, fork and clone incrémenation notion
 - [x] GitIgnore on output
 - [x] Column hash for IOCs 
