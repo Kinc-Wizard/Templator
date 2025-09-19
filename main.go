@@ -11,8 +11,12 @@ import (
 )
 
 func main() {
-	// Load configuration at startup
-	internals.LoadAppConfig()
+	// Load configuration at startup (optional)
+	if _, err := os.Stat("config.json"); err == nil {
+		internals.LoadAppConfig()
+	} else {
+		internals.SendDebugMessage("⚠️ config.json not found; using defaults and PATH tools")
+	}
 
 	// Create necessary directories
 	os.MkdirAll("output", 0755)
@@ -58,6 +62,7 @@ func main() {
 	// Static file servers
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 	http.Handle("/output/", http.StripPrefix("/output/", http.FileServer(http.Dir("output"))))
+	http.Handle("/screenshots/", http.StripPrefix("/screenshots/", http.FileServer(http.Dir("screenshots"))))
 
 	fmt.Println("http://localhost:12345")
 	http.ListenAndServe(":12345", nil)

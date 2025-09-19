@@ -126,4 +126,3 @@ echo "- C# uses: mono/mcs with .NET 4.5 profile"
 echo "- Rust uses: cargo with targets x86_64-pc-windows-gnu and i686-pc-windows-gnu"
 echo "You can run Templator by installing golang and running the following command: go build main.go to compile the project"
 echo "You can also run the following command: go run main.go to run the project"
-

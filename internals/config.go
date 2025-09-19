@@ -20,18 +20,18 @@ type AppConfig struct {
 // Global variable to hold the loaded config
 var Config AppConfig
 
-// LoadAppConfig reads the configuration from config.json
+// LoadAppConfig reads the configuration from config.json (optional)
 func LoadAppConfig() {
 	configFile, err := os.ReadFile("config.json")
 	if err != nil {
-		fmt.Printf("❌ CRITICAL: Could not read config.json: %v. Please ensure it exists and is readable.\n", err)
-		os.Exit(1) // Exit if config cannot be read
+		fmt.Printf("⚠️ Could not read config.json: %v. Proceeding with defaults.\n", err)
+		return
 	}
 
 	err = json.Unmarshal(configFile, &Config)
 	if err != nil {
-		fmt.Printf("❌ CRITICAL: Could not parse config.json: %v. Please ensure it is valid JSON.\n", err)
-		os.Exit(1) // Exit if config cannot be parsed
+		fmt.Printf("⚠️ Could not parse config.json: %v. Proceeding with defaults.\n", err)
+		return
 	}
-	// Configuration loaded successfully
+	// Configuration loaded successfully (optional)
 }

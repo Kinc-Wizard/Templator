@@ -1,0 +1,43 @@
+# Output artifacts
+output/
+
+# Uploads (optional)
+uploads/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE/editor
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Go build artifacts
+bin/
+build/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+# Rust
+target/
+**/target/
+
+# Tests
+tests/
+tests_output/
+tests_reports/
+
+# Local test config
+test_config.json
+
+# Coverage reports
+coverage.out
+coverage.html
+

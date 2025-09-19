@@ -9,6 +9,7 @@
                     <th>Language</th>
                     <th>Architecture</th>
                     <th>Created</th>
+                    <th>MD5</th>
                     <th>Obfuscation</th>
                     <th>Encryption</th>
                     <th>Process</th>
@@ -38,6 +39,19 @@
                         </td>
                         <td>{{ .Arch }}</td>
                         <td><small>{{ .Created }}</small></td>
+                        <td>
+						{{ if .MD5 }}
+							<details>
+								<summary class="has-text-primary md5-summary" style="cursor:pointer"> hash</summary>
+								<div class="mt-2" style="display:flex;align-items:center;gap:0.5rem;">
+									<div class="hash-scroll"><code>{{ .MD5 }}</code></div>
+									<button title="Copy" class="button is-small is-light" onclick="navigator.clipboard.writeText('{{ .MD5 }}'); event.stopPropagation();">📋</button>
+								</div>
+							</details>
+						{{ else }}
+							<span class="tag is-light">N/A</span>
+						{{ end }}
+                        </td>
                         <td>
                             {{ if .Obfuscated }}
                                 <span class="tag is-info">Obfuscated</span>
@@ -75,7 +89,7 @@
                     {{ end }}
                 {{ else }}
                     <tr>
-                        <td colspan="9" class="has-text-centered">No payloads generated yet</td>
+                        <td colspan="10" class="has-text-centered">No payloads generated yet</td>
                     </tr>
                 {{ end }}
             </tbody>

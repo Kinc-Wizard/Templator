@@ -1,15 +1,28 @@
 # Templator
+
+![GitHub Stars](https://img.shields.io/github/stars/Kinc-Wizard/Templator?style=social)
+![GitHub Forks](https://img.shields.io/github/forks/Kinc-Wizard/Templator?style=social)
+![GitHub Watchers](https://img.shields.io/github/watchers/Kinc-Wizard/Templator?style=social)
+
 ShellCode Template, generate custom shellcode loader trought template selection
 
 <p align="center">
   <img src="screenshots/logo.png" alt="Templator Logo" width="500"/>
 </p>
 
+This program is initially designed to store my/your custom loaders and make them easier to modify so you can quickly inject the shellcode of your preferred C2.
+
+In a second phase, the goal is to allow you to generate a custom loader from scratch by simply referencing placeholders, using the selected programming language and API level.
+
+For now, only Windows is targeted. As a result, there is no native distinction between Linux and Windows when referencing templates.
+
+# Demo
+![Kazam_screencast_00000-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/8f22315a-3828-4811-a843-47294faf4acd)
+
 # Interface
 <img width="1283" height="894" alt="image" src="https://github.com/user-attachments/assets/844f1059-6e1d-41b0-970b-d76406d3d45c" />
 <img width="1262" height="509" alt="image" src="https://github.com/user-attachments/assets/a6c9f9b3-7c07-4bf8-9a0e-3d3c2bf92e73" />
 <img width="607" height="295" alt="image" src="https://github.com/user-attachments/assets/15fb901e-a68f-4d58-a8ac-9ebbc14f935f" />
-
 
 # Template management
 
