@@ -16,6 +16,9 @@ In a second phase, the goal is to allow you to generate a custom loader from scr
 
 For now, only Windows is targeted. As a result, there is no native distinction between Linux and Windows when referencing templates.
 
+# Demo
+![Kazam_screencast_00000-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/8f22315a-3828-4811-a843-47294faf4acd)
+
 # Interface
 <img width="1283" height="894" alt="image" src="https://github.com/user-attachments/assets/844f1059-6e1d-41b0-970b-d76406d3d45c" />
 <img width="1262" height="509" alt="image" src="https://github.com/user-attachments/assets/a6c9f9b3-7c07-4bf8-9a0e-3d3c2bf92e73" />
