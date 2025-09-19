@@ -59,20 +59,18 @@ You need to give a template that correspond exactly to the of the template.json 
 ## Features v0.6
 - [x] Add compilation command line inside template.json : 
 - [x] Update read me : download and installation , goal and purpose of templator
-- [ ] Add New template ( cpp - native - spawn process injection)
 - [x] Use logo to make loading page during compilation
 - [x] Decrase verbosity web terminal
 - [x] Unitary test in new folder add to GitIgnore, unitary need to test to compile all template in all archtecture available.
 - [ ] Post demo video in the readme
-- [ ] Increase choice methode for encryption template
 - [x] update Read me with, view, fork and clone incrémenation notion
 - [x] GitIgnore on output
-- [ ] Column custom commentaty by operator
-- [ ] Column hash for IOCs 
+- [x] Column hash for IOCs 
 
  
 ## Features v0.7
 ### Generator function :
+- [ ] Add New template ( cpp - native - spawn process injection)
 - [ ] Add référence library :
     ==> Native.h
     ==> Win32.h
@@ -84,3 +82,4 @@ You need to give a template that correspond exactly to the of the template.json 
       - [ ] Can debbug (try too compile) actual template
       - [ ] Expérimenten full place holder template génération {{win32.openprocress, native.ntopenprocess}}
       - [ ] Add New place holder {{langage.c}} in function of language
+- [ ] Increase choice methode for encryption template

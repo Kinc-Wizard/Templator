@@ -22,6 +22,7 @@ type Payload struct {
 	Obfuscated bool   `json:"obfuscated"`
 	Encrypted  string `json:"encrypted,omitempty"`
 	Process    string `json:"process_name,omitempty"`
+    MD5        string `json:"md5,omitempty"`
 }
 
 // WebTemplates holds the parsed HTML templates
@@ -257,7 +258,7 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	// Create metadata
+    // Create metadata
 	SendDebugMessage("📋 Creating metadata file...")
 	metaPath := strings.TrimSuffix(outputPE, ".exe") + ".json"
 	var obfuscated bool
@@ -265,13 +266,21 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
 		obfuscated = true
 	}
 
-	metaMap := map[string]interface{}{
+    // Compute MD5 of the compiled executable
+    md5sum, err := ComputeFileMD5(outputPE)
+    if err != nil {
+        SendDebugMessage(fmt.Sprintf("❌ Failed to compute MD5: %v", err))
+        md5sum = ""
+    }
+
+    metaMap := map[string]interface{}{
 		"filename":   filepath.Base(outputPE),
 		"template":   templateName,
 		"language":   selectedTemplate.Language,
 		"arch":       arch,
 		"created":    time.Now().Format("2006-01-02 15:04:05"),
 		"obfuscated": obfuscated,
+        "md5":        md5sum,
 	}
 	if encryptedProtocol != "" {
 		metaMap["encrypted"] = encryptedProtocol

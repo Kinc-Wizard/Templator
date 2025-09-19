@@ -2,6 +2,7 @@ package internals
 
 import (
 	"crypto/rand"
+	"crypto/md5"
 	"encoding/hex"
 	"fmt"
 	"io"
@@ -173,4 +174,20 @@ func SaveUploadedFile(file io.Reader, filename string) (string, error) {
 	}
 	
 	return tmpShellcodePath, nil
+}
+
+// ComputeFileMD5 computes the MD5 hash of a file and returns it as a hex string
+func ComputeFileMD5(filePath string) (string, error) {
+	f, err := os.Open(filePath)
+	if err != nil {
+		return "", err
+	}
+	defer f.Close()
+
+	h := md5.New()
+	if _, err := io.Copy(h, f); err != nil {
+		return "", err
+	}
+
+	return hex.EncodeToString(h.Sum(nil)), nil
 }
