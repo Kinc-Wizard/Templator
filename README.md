@@ -17,21 +17,12 @@ In a second phase, the goal is to allow you to generate a custom loader from scr
 For now, only Windows is targeted. As a result, there is no native distinction between Linux and Windows when referencing templates.
 
 # Demo
-![Kazam_screencast_00000-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/8f22315a-3828-4811-a843-47294faf4acd)
+https://github.com/user-attachments/assets/0567df44-3fd0-4798-a233-fa9cd0b48ba8
 
 # Interface
 <img width="1283" height="894" alt="image" src="https://github.com/user-attachments/assets/844f1059-6e1d-41b0-970b-d76406d3d45c" />
 <img width="1262" height="509" alt="image" src="https://github.com/user-attachments/assets/a6c9f9b3-7c07-4bf8-9a0e-3d3c2bf92e73" />
 <img width="607" height="295" alt="image" src="https://github.com/user-attachments/assets/15fb901e-a68f-4d58-a8ac-9ebbc14f935f" />
-
-# Install
-Project work with golang 1.21
-```
-git clone https://github.com/Kinc-Wizard/Templator.git
-cd Templator
-go mod tidy
-chmod +x ./install_dependencies.sh
-```
 
 # Template management
 
@@ -59,17 +50,6 @@ You need to give a template that correspond exactly to the of the template.json 
         "needs_process": true / false
         "needs_process_path": true / false
 
-## Features v0.6
-- [x] Add compilation command line inside template.json : 
-- [x] Update read me : download and installation , goal and purpose of templator
-- [x] Use logo to make loading page during compilation
-- [x] Decrase verbosity web terminal
-- [x] Unitary test in new folder add to GitIgnore, unitary need to test to compile all template in all archtecture available.
-- [X] Post demo video in the readme
-- [x] update Read me with, view, fork and clone incrémenation notion
-- [x] GitIgnore on output
-- [x] Column hash for IOCs 
-
  
 ## Features v0.7
 ### Generator function :
@@ -78,11 +58,11 @@ You need to give a template that correspond exactly to the of the template.json 
     ==> Native.h
     ==> Win32.h
 - [ ] New web page dedicated to template génération
-      - [ ] Select langage
-      - [ ] Select api level
-      - [ ] Visualize in interconnected map the possible systemcall : pre-phrase --> possibility step by step (1 OpenProcress, Exec, Download) --> find a way to map the possibility
-      - [ ] Can save the actual template
-      - [ ] Can debbug (try too compile) actual template
-      - [ ] Expérimenten full place holder template génération {{win32.openprocress, native.ntopenprocess}}
-      - [ ] Add New place holder {{langage.c}} in function of language
+- [ ] Select langage
+- [ ] Select api level
+- [ ] Visualize in interconnected map the possible systemcall : pre-phrase --> possibility step by step (1 OpenProcress, Exec, Download) --> find a way to map the possibility
+- [ ] Can save the actual template
+- [ ] Can debbug (try too compile) actual template
+- [ ] Expérimenten full place holder template génération {{win32.openprocress, native.ntopenprocess}}
+- [ ] Add New place holder {{langage.c}} in function of language
 - [ ] Increase choice methode for encryption template
