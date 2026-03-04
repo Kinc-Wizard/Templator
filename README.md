@@ -51,9 +51,15 @@ You need to give a template that correspond exactly to the of the template.json 
         "needs_process_path": true / false
 
  
+## Features v0.6.5
+- [ ] Add New template ( cpp - native - spawn process injection)
+- [ ] Add more language to compile
+- [ ] Update Installation script to add more language
+- [ ] Add basic example of other language
+- [ ] Add table to resume which language will be able to compile using installation tools
+
 ## Features v0.7
 ### Generator function :
-- [ ] Add New template ( cpp - native - spawn process injection)
 - [ ] Add référence library :
     ==> Native.h
     ==> Win32.h
