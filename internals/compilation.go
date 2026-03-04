@@ -8,6 +8,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"strings"
+	"sync"
 )
 
 // CompileResult represents the result of a compilation
@@ -56,7 +57,9 @@ func CompileC(sourcePath, outputPath, arch string, hasEncryption bool) CompileRe
 		return CompileResult{Success: false, Output: nil, Error: err}
 	}
 	var buf strings.Builder
+	var wg sync.WaitGroup
 	stream := func(r io.Reader, prefix string) {
+		defer wg.Done()
 		sc := bufio.NewScanner(r)
 		for sc.Scan() {
 			line := sc.Text()
@@ -64,9 +67,11 @@ func CompileC(sourcePath, outputPath, arch string, hasEncryption bool) CompileRe
 			SendDebugMessage(prefix + line)
 		}
 	}
+	wg.Add(2)
 	go stream(stdout, "📤 ")
 	go stream(stderr, "⚠️ ")
 	err := cmd.Wait()
+	wg.Wait()
 	output := []byte(buf.String())
 
 	if err == nil {
@@ -131,7 +136,9 @@ func CompileCSharp(sourcePath, outputPath, arch string) CompileResult {
 		return CompileResult{Success: false, Output: nil, Error: err}
 	}
 	var buf2 strings.Builder
+	var wg2 sync.WaitGroup
 	stream := func(r io.Reader, prefix string) {
+		defer wg2.Done()
 		sc := bufio.NewScanner(r)
 		for sc.Scan() {
 			line := sc.Text()
@@ -139,9 +146,11 @@ func CompileCSharp(sourcePath, outputPath, arch string) CompileResult {
 			SendDebugMessage(prefix + line)
 		}
 	}
+	wg2.Add(2)
 	go stream(stdout, "📤 ")
 	go stream(stderr, "⚠️ ")
 	err := compileCmd.Wait()
+	wg2.Wait()
 	output := []byte(buf2.String())
 
 	if err == nil {
@@ -393,7 +402,9 @@ func RunCustomCompile(cmdTemplate string, placeholders map[string]string, workDi
 		return CompileResult{Success: false, Output: nil, Error: err}
 	}
 	var buf strings.Builder
+	var wg sync.WaitGroup
 	stream := func(r io.Reader, prefix string) {
+		defer wg.Done()
 		sc := bufio.NewScanner(r)
 		for sc.Scan() {
 			line := sc.Text()
@@ -401,9 +412,11 @@ func RunCustomCompile(cmdTemplate string, placeholders map[string]string, workDi
 			SendDebugMessage(prefix + line)
 		}
 	}
+	wg.Add(2)
 	go stream(stdout, "📤 ")
 	go stream(stderr, "⚠️ ")
 	err := cmd.Wait()
+	wg.Wait()
 	outBytes := []byte(buf.String())
 	if err != nil {
 		SendDebugMessage("❌ Custom compile failed")

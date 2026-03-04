@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 	"sort"
@@ -54,10 +55,8 @@ func main() {
 	http.HandleFunc("/upload", internals.UploadHandler)
 	http.HandleFunc("/downloads", internals.DownloadsPageHandler)
 	http.HandleFunc("/delete/", internals.DeleteHandler)
-	http.HandleFunc("/terminal_ws", internals.TerminalWSHandler)
 	http.HandleFunc("/ws/terminal", internals.TerminalWSHandler)
 	http.HandleFunc("/template_details", internals.GetTemplateDetailsHandler)
-	http.HandleFunc("/template/details", internals.GetTemplateDetailsHandler)
 
 	// Static file servers
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
@@ -65,5 +64,5 @@ func main() {
 	http.Handle("/screenshots/", http.StripPrefix("/screenshots/", http.FileServer(http.Dir("screenshots"))))
 
 	fmt.Println("http://localhost:12345")
-	http.ListenAndServe(":12345", nil)
+	log.Fatal(http.ListenAndServe(":12345", nil))
 }

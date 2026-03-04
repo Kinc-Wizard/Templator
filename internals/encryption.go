@@ -8,64 +8,24 @@ import (
 	"strings"
 )
 
-// RunSupernovaAES runs Supernova with AES encryption
-func RunSupernovaAES(inputPath, lang string) (key, iv, encryptedShellcode string, err error) {
-	SendDebugMessage("🔐 Starting AES encryption with Supernova...")
-	SendDebugMessage(fmt.Sprintf("📁 Input file: %s", inputPath))
-	SendDebugMessage(fmt.Sprintf("🌐 Language: %s", lang))
-	
-	encOut := "/tmp/enc-shellcode.bin"
-	SendDebugMessage(fmt.Sprintf("📄 Output file: %s", encOut))
-	
-	cmd := exec.Command(
-		"tools/native/Supernova/Supernova",
-		"-enc", "AES",
-		"-input", inputPath,
-		"-key", "32",
-		"-lang", lang,
-	)
-	
-	SendDebugMessage("⚙️ Running Supernova encryption tool...")
-	
-	outfile, err := os.Create(encOut)
-	if err != nil {
-		SendDebugMessage(fmt.Sprintf("❌ Failed to create output file: %v", err))
-		return "", "", "", fmt.Errorf("failed to create enc-shellcode.bin: %v", err)
-	}
-	defer outfile.Close()
-	cmd.Stdout = outfile
-	cmd.Stderr = os.Stderr
-	if err := cmd.Run(); err != nil {
-		SendDebugMessage(fmt.Sprintf("❌ Supernova encryption failed: %v", err))
-		return "", "", "", fmt.Errorf("Supernova error: %v", err)
-	}
-
-	SendDebugMessage("✅ Supernova encryption completed successfully")
-	SendDebugMessage("🔍 Parsing encryption output...")
-
-	// Now parse enc-shellcode.bin for key, iv, and encrypted payload
-	key, iv, encryptedShellcode, err = parseSupernovaOutput(encOut)
-	if err != nil {
-		SendDebugMessage(fmt.Sprintf("❌ Failed to parse encryption output: %v", err))
-	} else {
-		SendDebugMessage("✅ Encryption output parsed successfully")
-		SendDebugMessage(fmt.Sprintf("🔑 Key length: %d bytes", len(key)))
-		SendDebugMessage(fmt.Sprintf("🔐 IV length: %d bytes", len(iv)))
-		SendDebugMessage(fmt.Sprintf("🔒 Encrypted shellcode length: %d bytes", len(encryptedShellcode)))
-	}
-	return
-}
-
 // RunSupernovaEncryption runs Supernova with dynamic encryption algorithm
 func RunSupernovaEncryption(inputPath, lang, encAlgo string) (key, iv, encryptedShellcode string, err error) {
 	SendDebugMessage(fmt.Sprintf("🔐 Starting %s encryption with Supernova...", encAlgo))
 	SendDebugMessage(fmt.Sprintf("📁 Input file: %s", inputPath))
 	SendDebugMessage(fmt.Sprintf("🌐 Language: %s", lang))
 	SendDebugMessage(fmt.Sprintf("🔒 Algorithm: %s", encAlgo))
-	
-	encOut := "/tmp/enc-shellcode.bin"
+
+	tmpFile, err := os.CreateTemp("", "enc-shellcode-*.bin")
+	if err != nil {
+		SendDebugMessage(fmt.Sprintf("❌ Failed to create temp output file: %v", err))
+		return "", "", "", fmt.Errorf("failed to create temp enc file: %v", err)
+	}
+	encOut := tmpFile.Name()
+	tmpFile.Close()
+	defer os.Remove(encOut)
+
 	SendDebugMessage(fmt.Sprintf("📄 Output file: %s", encOut))
-	
+
 	cmd := exec.Command(
 		"tools/native/Supernova/Supernova",
 		"-enc", encAlgo,
@@ -73,13 +33,13 @@ func RunSupernovaEncryption(inputPath, lang, encAlgo string) (key, iv, encrypted
 		"-key", "32",
 		"-lang", lang,
 	)
-	
+
 	SendDebugMessage("⚙️ Running Supernova encryption tool...")
-	
+
 	outfile, err := os.Create(encOut)
 	if err != nil {
 		SendDebugMessage(fmt.Sprintf("❌ Failed to create output file: %v", err))
-		return "", "", "", fmt.Errorf("failed to create enc-shellcode.bin: %v", err)
+		return "", "", "", fmt.Errorf("failed to create enc-shellcode file: %v", err)
 	}
 	defer outfile.Close()
 	cmd.Stdout = outfile

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"sync"
 
 	"github.com/gorilla/websocket"
 )
@@ -13,11 +14,14 @@ type WSCommand struct {
 	Type string `json:"type"`
 }
 
+const maxTerminalHistory = 500
+
 // Global channel for debug messages
 var DebugChannel = make(chan string, 100)
 
 // Terminal history for WebSocket clients
 var TerminalHistory []string
+var terminalMu sync.Mutex
 
 // WebSocket upgrader
 var Upgrader = websocket.Upgrader{
@@ -30,7 +34,12 @@ var Upgrader = websocket.Upgrader{
 
 // SendDebugMessage sends a debug message to the terminal
 func SendDebugMessage(message string) {
+	terminalMu.Lock()
 	TerminalHistory = append(TerminalHistory, message)
+	if len(TerminalHistory) > maxTerminalHistory {
+		TerminalHistory = TerminalHistory[len(TerminalHistory)-maxTerminalHistory:]
+	}
+	terminalMu.Unlock()
 	select {
 	case DebugChannel <- message:
 	default:
@@ -48,9 +57,13 @@ func TerminalWSHandler(w http.ResponseWriter, r *http.Request) {
 	defer conn.Close()
 
 	// Send the message history
-	for _, message := range TerminalHistory {
-		err := conn.WriteMessage(websocket.TextMessage, []byte(message))
-		if err != nil {
+	terminalMu.Lock()
+	history := make([]string, len(TerminalHistory))
+	copy(history, TerminalHistory)
+	terminalMu.Unlock()
+
+	for _, message := range history {
+		if err := conn.WriteMessage(websocket.TextMessage, []byte(message)); err != nil {
 			break
 		}
 	}
@@ -69,14 +82,14 @@ func TerminalWSHandler(w http.ResponseWriter, r *http.Request) {
 			}
 
 			if cmd.Type == "clear_terminal" {
-				// Clear the history
+				terminalMu.Lock()
 				TerminalHistory = nil
+				terminalMu.Unlock()
 				SendDebugMessage("Terminal cleared")
 			}
 		}
 	}()
 
-	// Continue listening for new messages
 	// Drain any queued messages to avoid duplicating startup logs (history + buffered channel)
 	for {
 		select {
@@ -89,8 +102,7 @@ func TerminalWSHandler(w http.ResponseWriter, r *http.Request) {
 
 startStream:
 	for message := range DebugChannel {
-		err := conn.WriteMessage(websocket.TextMessage, []byte(message))
-		if err != nil {
+		if err := conn.WriteMessage(websocket.TextMessage, []byte(message)); err != nil {
 			break
 		}
 	}

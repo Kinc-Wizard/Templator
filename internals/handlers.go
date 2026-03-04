@@ -150,14 +150,15 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
 			break
 		}
 	}
-	if encAlgoSelected == "" && selectedTemplate.SupportEncryption {
-		encAlgoSelected = "AES"
-	}
 
 	var keyStr, ivStr, encShellcodeStr string
 	if encAlgoSelected != "" {
 		SendDebugMessage(fmt.Sprintf("🔐 Encryption required (%s). Running Supernova...", encAlgoSelected))
-		k, v, es, errEnc := RunSupernovaEncryption(tmpShellcodePath, strings.Title(selectedTemplate.Language), encAlgoSelected)
+		lang := selectedTemplate.Language
+		if len(lang) > 0 {
+			lang = strings.ToUpper(lang[:1]) + lang[1:]
+		}
+		k, v, es, errEnc := RunSupernovaEncryption(tmpShellcodePath, lang, encAlgoSelected)
 		if errEnc != nil {
 			SendDebugMessage(fmt.Sprintf("❌ %s encryption error: %v", encAlgoSelected, errEnc))
 			http.Error(w, fmt.Sprintf("%s encryption error: %v", encAlgoSelected, errEnc), http.StatusInternalServerError)
@@ -188,14 +189,15 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Write source file
+	// Write source file (name tied to randomName to avoid concurrent collisions)
+	baseOut := strings.TrimSuffix(randomName, ".exe")
 	var sourcePath string
 	if selectedTemplate.Language == "c" {
-		sourcePath = filepath.Join("output", "output.c")
+		sourcePath = filepath.Join("output", baseOut+".c")
 	} else if selectedTemplate.Language == "csharp" {
-		sourcePath = filepath.Join("output", "output.cs")
+		sourcePath = filepath.Join("output", baseOut+".cs")
 	} else if selectedTemplate.Language == "rust" {
-		sourcePath = filepath.Join("output", "output.rs")
+		sourcePath = filepath.Join("output", baseOut+".rs")
 	}
 
 	SendDebugMessage("💾 Writing source file...")
@@ -244,8 +246,6 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/?message=Compilation error&status=error", http.StatusSeeOther)
 		return
 	}
-
-	// Encryption already handled before template processing
 
 	// Run Astral-PE if requested
 	if r.FormValue("ep_obfuscator") == "on" {
@@ -341,9 +341,8 @@ func GetPayloads() []Payload {
 		payload.Filename = filename
 
 		if jsonData, err := os.ReadFile(jsonPath); err == nil {
-			if err := json.Unmarshal(jsonData, &payload); err == nil {
-				payload.Filename = filename
-			}
+			json.Unmarshal(jsonData, &payload)
+			payload.Filename = filename
 		} else {
 			payload = Payload{
 				Filename:   filename,
@@ -372,7 +371,6 @@ func GetPayloads() []Payload {
 
 // DownloadsPageHandler handles the downloads page
 func DownloadsPageHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("==> Rendering downloads page")
 	payloads := GetPayloads()
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")

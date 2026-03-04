@@ -161,7 +161,7 @@ func convertCToCSharpArray(cArray string) (string, error) {
 
 // SaveUploadedFile saves an uploaded file to the uploads directory
 func SaveUploadedFile(file io.Reader, filename string) (string, error) {
-	tmpShellcodePath := filepath.Join("uploads", filename)
+	tmpShellcodePath := filepath.Join("uploads", filepath.Base(filename))
 	outFile, err := os.Create(tmpShellcodePath)
 	if err != nil {
 		return "", fmt.Errorf("error creating file: %v", err)
